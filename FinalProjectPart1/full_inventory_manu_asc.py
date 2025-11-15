@@ -25,14 +25,14 @@ with open ("csv_inputs/ManufacturerList.csv", 'r') as csv_manufacturerlist: #fil
 # print('manu sorted', manufacturerList_sorted)
 
 
-# Corresponding item price with manufacturerlist using imported 'sortedprice' array
+# Corresponding item's price and item's service_date with manufacturerlist using imported 'pricesorted' and 'service_date_sorted' array
 for i in manufacturerList_sorted:
     for j in pricesorted:
         for k in service_date_sorted:
-            if i[0] == j[0] and i[0] == k[0]: #if item_id matches in manufacturerList_sorted & in pricesorted
-                i.insert (3, j[1]) #insert item price date into pos 3 manufactureList_sorted
-                i.insert(4, k[1]) #insert item date into pos 2 manufactureList_sorted
-                full_inventory_list.append(i) #append the new item list that includes ex: ['item_id', 'manufacturer', 'item_type', 'item_price']
+            if i[0] == j[0] and i[0] == k[0]: #if item_id, i[0], matches in manufacturerList_sorted & item_id,j[0], in pricesorted AND item_id,i[0], matches item_id,j[0], in service_date_sorted
+                i.insert (3, j[1]) #insert item_price,j[1], into pos 3 of manufactureList_sorted
+                i.insert(4, k[1]) #insert item_service_date into pos 2 of manufactureList_sorted
+                full_inventory_list.append(i) #append the new item record that includes [item_id,manufacturer, item_type, item_price,service_date,if_damaged]
 
 if (__name__ == "__main__"):
     print('full inventory list', full_inventory_list)

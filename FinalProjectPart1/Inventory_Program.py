@@ -1,60 +1,24 @@
 import csv
 from datetime import datetime, date
 from Asc_Date_Sort_ServiceDatesList_csv import service_date_sorted 
-from Desc_Sort_PriceList_csv import pricesorted 
+from full_inventory_manu_asc import full_inventory_list
 
-
-manufacturerList_sorted = []
-full_inventory_list = []
-
-with open ("ManufacturerList.csv", 'r') as csv_manufacturerlist: #file_object
-    manufacturerlist_csv = csv.reader (csv_manufacturerlist, skipinitialspace=True) #csv reader object
-    next(manufacturerlist_csv) #skips header row in csv file "item_id, service_date"
-
-    for i in manufacturerlist_csv:
-        cleaned_item = [j.strip() for j in i if j!=''] #removes whitepsaces in csv while ignoring the last comma to prevent appending a null, 'if_damaged' field
-        
-        manufacturerList_sorted.append(cleaned_item)
-    
-    #Sorts lists of items by manufacturers asc (ex: 'Apple', 'Dell', 'Lenovo'), position 1 [['1167234', 'Apple', 'phone'],[item2_id, manufacturer, item_type],...]
-    #Sorts lists of items by item_type asc (ex: 'laptop', 'phone', 'tower'), position 2 [['1167234', 'Apple', 'phone'],[item2_id, manufacturer, item_type],...]
-    manufacturerList_sorted.sort(key=lambda x: (x[1], x[2])) 
-    
-    # manufacturerList_array [['2347800', 'Apple', 'laptop'], ['1167234', 'Apple', 'phone'], 
-    # ['2390112', 'Dell', 'laptop'], ['9034210', 'Dell', 'tower'], ['7346234', 'Lenovo', 'laptop', 'damaged'], 
-    # ['1009453', 'Lenovo', 'tower'], ['3001265', 'Samsung', 'phone']]
-    
-# print('manu sorted', manufacturerList_sorted)
-
-
-# Corresponding item price with manufacturerlist using imported 'sortedprice' array
-for i in manufacturerList_sorted:
-    for j in pricesorted:
-        for k in service_date_sorted:
-            if i[0] == j[0] and i[0] == k[0]: #if item_id matches in manufacturerList_sorted & in pricesorted
-                i.insert (3, j[1]) #insert item price date into pos 3 manufactureList_sorted
-                i.insert(4, k[1]) #insert item date into pos 2 manufactureList_sorted
-                full_inventory_list.append(i) #append the new item list that includes ex: ['item_id', 'manufacturer', 'item_type', 'item_price']
-
-
-# print('full inventory list', full_inventory_list)
-
+#writing FullInventory.csv - writing all items in inventory ex: [item_id,manufacturer,item_type,price,service_date,if_damaged]
 def writing_full_inventory_csv():
-    with open('FullInventory.csv', 'w', newline='') as full_inventory_csv: #file obj, returns csv file
+    with open('csv_outputs/FullInventory.csv', 'w', newline='') as full_inventory_csv: #file obj, returns csv file
         write_full_inventory_csv = csv.writer(full_inventory_csv) #csv writer object
         write_full_inventory_csv.writerows(full_inventory_list)
     print("FullInventory.csv written successfully!")
 
 
-
-
+#writing {Item_type}Inventory.csv - writing csv files for different item_type in inventory ex: PhoneInventory.csv [item_id,manufacturer,price,service_date,if_damaged]
 def writing_item_type_csv():
     diff_item_type = [] #storing diff item_type
     for i in full_inventory_list: #looping thru items in inventory to target i[2], which is the item_type (ex: laptop, phone)
         x_item_type_list = []
         if(i[2] not in diff_item_type): #if item_type not in item_type[], then loop thru full_inventory for that diff item_type
             diff_item_type.append(i[2]) #append new item_type ['phone','laptop'...]
-            with open(f'{i[2].capitalize()}Inventory.csv', 'w', newline='') as item_type_csv: #creating {Item_type}Inventory.csv file (ex: "LaptopInventory.csv")
+            with open(f"csv_outputs/{i[2].capitalize()}Inventory.csv", 'w', newline='') as item_type_csv: #creating {Item_type}Inventory.csv file (ex: "LaptopInventory.csv")
                 write_csv_item_type = csv.writer(item_type_csv)
                 for j in full_inventory_list: #for appending item records related to the item_type chosen, i[2]. Loop item_type, i[2], in full_inventory_list until it's done
                     if i[2] == j[2]: #if the item_type, i[2], == j[2] then write down tht item_type record, (j), into {item_type}Inventory.csv
@@ -67,11 +31,11 @@ def writing_item_type_csv():
                 print(f'{i[2].capitalize()}Inventory.csv written successfully!')
                 
 
-
+#writing PastServiceDateInventory.csv - writing all items where today's date is greater than an item's service date, ex: PastServiceDateInventory.csv [item_id,manufacturer,item_type,price,service_date,if_damaged]
 def writing_past_service_date_csv():
     past_service_date_list = []
-    with open('PastServiceDateInventory.csv', 'w', newline='') as past_service_date_csv: #creating PastServiceDateInventory csv file
-        write_csv_past_service_date = csv.writer(past_service_date_csv) #writing from past_service_date_csv
+    with open('csv_outputs/PastServiceDateInventory.csv', 'w', newline='') as past_service_date_csv: #creating PastServiceDateInventory csv file
+        write_csv_past_service_date = csv.writer(past_service_date_csv)
         for i in service_date_sorted:
             if datetime.strptime(i[1], "%m/%d/%Y").date() < date.today():
                 for j in full_inventory_list:
@@ -79,8 +43,22 @@ def writing_past_service_date_csv():
                         past_service_date_list.append(j) #appending item record from full_inventory_list [] where today's date is item's service date
                         
         write_csv_past_service_date.writerows(past_service_date_list)
-    print("FullInventory.csv written successfully!")
+    print("PastServiceDateInventory.csv written successfully!")
         
+
+
+#writing DamagedInventory.csv - writing all damaged items, sorted most to least expensive, ex: DamagedInventory.csv [item_id,manufacturer,item_type,price,service_date]
+def writing_damaged_inventory_csv():
+    damaged_inventory_list = []
+    with open ('csv_outputs/DamagedInventory.csv', 'w', newline='') as damaged_inventory_csv:
+        write_csv_damaged_inventory = csv.writer(damaged_inventory_csv)
+        for i in full_inventory_list:
+            if len(i) == 6: #item records w/len of 6 indicates that it is damaged (Ex: ['7346234', 'Lenovo', 'laptop', '239', '9/1/2020', 'damaged'] vs ['1009453', 'Lenovo', 'tower', '599', '10/1/2020'])
+                damaged_inventory_list.append(i)
+
+        damaged_inventory_list.sort(key=lambda x: int(x[3]), reverse=True) #most expensive to least expensive
+        write_csv_damaged_inventory.writerows(i[:-1] for i in damaged_inventory_list )
+    
 
 
 if __name__ == "__main__":
@@ -94,4 +72,8 @@ if __name__ == "__main__":
     print()
     print('Past Service Date List:')
     writing_past_service_date_csv()
+    
+    print()
+    print('Damaged Inventory List:')
+    writing_damaged_inventory_csv()
 
