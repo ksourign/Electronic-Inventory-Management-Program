@@ -5,6 +5,7 @@ from Full_Inventory_Manu_asc import full_inventory_list
 
 #writing FullInventory.csv - writing all items in inventory ex: [item_id,manufacturer,item_type,price,service_date,if_damaged]
 def writing_full_inventory_csv():
+    print('Full Inventory List:')
     with open('csv_outputs/FullInventory.csv', 'w', newline='') as full_inventory_csv: #file obj, returns csv file
         write_full_inventory_csv = csv.writer(full_inventory_csv) #csv writer object
         write_full_inventory_csv.writerows(full_inventory_list)
@@ -13,6 +14,7 @@ def writing_full_inventory_csv():
 
 #writing {Item_type}Inventory.csv - writing csv files for different item_type in inventory ex: PhoneInventory.csv [item_id,manufacturer,price,service_date,if_damaged]
 def writing_item_type_csv():
+    print('\nItem Type Inventory List:')
     diff_item_type = [] #storing diff item_type
     for i in full_inventory_list: #looping thru items in inventory to target i[2], which is the item_type (ex: laptop, phone)
         x_item_type_list = []
@@ -33,6 +35,7 @@ def writing_item_type_csv():
 
 #writing PastServiceDateInventory.csv - writing all items where today's date is greater than an item's service date, ex: PastServiceDateInventory.csv [item_id,manufacturer,item_type,price,service_date,if_damaged]
 def writing_past_service_date_csv():
+    print('\nPast Service Date List:')
     past_service_date_list = []
     with open('csv_outputs/PastServiceDateInventory.csv', 'w', newline='') as past_service_date_csv: #creating PastServiceDateInventory csv file
         write_csv_past_service_date = csv.writer(past_service_date_csv)
@@ -49,6 +52,7 @@ def writing_past_service_date_csv():
 
 #writing DamagedInventory.csv - writing all damaged items, sorted most to least expensive, ex: DamagedInventory.csv [item_id,manufacturer,item_type,price,service_date]
 def writing_damaged_inventory_csv():
+    print('\nDamaged Inventory List:')
     damaged_inventory_list = []
     with open ('csv_outputs/DamagedInventory.csv', 'w', newline='') as damaged_inventory_csv:
         write_csv_damaged_inventory = csv.writer(damaged_inventory_csv)
@@ -58,22 +62,108 @@ def writing_damaged_inventory_csv():
 
         damaged_inventory_list.sort(key=lambda x: int(x[3]), reverse=True) #most expensive to least expensive
         write_csv_damaged_inventory.writerows(i[:-1] for i in damaged_inventory_list )
+    print("DamagedInventory.csv written successfully!")
+
+
+
+
+#PART 2########################################################################################################################
+
+# Returns clean user input (ex: [[manufacturer,item_type]])
+def clean_user_input(user_input):
+    user_input = [user_input.split()] #splitting str userinput into an array (ex: user_input = "apple phone") --> (ex: [['apple','phone']])
+
+    #checking if user inputs a manufacturer and an item_type
+    manufacturer_list = {i[1].lower() for i in full_inventory_list} #created a set to remove duplicate manufacturers
+    item_type_list = {i[2] for i in full_inventory_list}
+
+
+    #Go through the stages of cleaning user_input to become [[manufacturer, item_type]] before checking inventory for item
+
+    # Error Message: Wrong Format Inputted. Please Try Again [ex: "apple phone"]
+    # if user_input includes more than just manufacturer and item_type (more than len of 2)
+    # Ensures that user input is length of 2 [[x,y]]
+    if len(user_input[0]) != 2:
+        print ('Wrong Format Inputted. Please Try Again [ex: "apple phone"]', user_input)
+
+
+    
+    
+    
+    #Clean user input:
+    # 1) checks if user inputted a valid manufacturer and item_type from inventory
+    # 2) reverse list order into [[manufacturer, item_type]] if user_input has it backwards
+    
+    elif user_input[0][0] in manufacturer_list and user_input[0][1] in item_type_list: #checks if user_input = [[manufacturer,item_type]]
+        return (user_input) #correct format inputted
+    
+    elif user_input[0][0] in item_type_list and user_input[0][1] in manufacturer_list: #checks if user_input = [[item_type,manufacturer]]
+        user_input[0].reverse() #reverse user_input
+        return (user_input)
+    
+    else: #if it's not in manufacturer_list or item_type_list, then that means it's not in inventory
+        print (f"No such item in inventory {user_input}")
+        
+        
+        
+def check_inventory(user_input):
+
+# start finding item in inventory
+
+    print("\nYour Item is:")
+
+    for i in user_input:
+        for j in full_inventory_list: #[[],[],[]]
+            if i[0] == j[1].lower and i[1] == j[2]: #if user's manufacturer,j[0], is equal to i[1](manufacturer position) AND i[2](item_type)
+                print(j[0], j[1], j[2], j[3]) #print the item_id, manufacturer, item_type, price
+
+
+    
+    # print('manufacturer_list', manufacturer_list)
+
+
     
 
+        
 
 if __name__ == "__main__":
-    print('Full Inventory List:')
+
+    # Part 1 (Creating CSV Outputs)
     writing_full_inventory_csv()
     
-    print()
-    print('Item Type Inventory List:')
+    
     writing_item_type_csv()
     
-    print()
-    print('Past Service Date List:')
+    
     writing_past_service_date_csv()
     
-    print()
-    print('Damaged Inventory List:')
+    
     writing_damaged_inventory_csv()
+
+
+
+
+
+
+    #Part 2 (Interactive Inventory Query)
+    print('\nEnter "q" to Quit')
+    
+    
+    
+    
+    #Code for User Inputs
+
+    # userinput = input("Enter manufacturer and item type [ex: 'apple phone']: ") #ex: userinput = 'apple phone'
+    userinput = ""
+    while userinput != 'q':
+        userinput = input("\nEnter manufacturer and item type [ex: 'apple phone']: ") #ex: userinput = 'apple phone'
+
+        if userinput != 'q':
+            # print(userinput) 
+            clean_user_input(userinput)
+            check_inventory (clean_user_input(userinput))
+
+
+
+
 
