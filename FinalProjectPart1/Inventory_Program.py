@@ -168,17 +168,35 @@ if __name__ == "__main__":
 
     # Part 2 (Interactive Inventory Query Capability)
     
-    print('\nEnter "q" to Quit')
+    print('\nInventory Program')
     # userinput = input("Enter manufacturer and item type [ex: 'apple phone']: ") #ex: userinput = 'apple phone'
     userinput = ""
     while userinput != 'q':
-        userinput = input("\nEnter manufacturer and item type [ex: 'apple phone']: ") #ex: userinput = 'apple phone'
+        userinput = input("\nEnter a Number from the Menu Below: \n"
+        "[1] Find items given manufacturer [ex: 'apple'] \n"
+        "[2] Find items given manufacturer and item type [ex: 'apple phone']: \n"
+        "[3] Find damaged items\n"
+        "[4] Find items past its service date \n"
+        "[5] Find the most and least expensive items\n\n"
+        "[q] Quit Inventory Program \n\n"
+        "Menu Number:")
 
-        if userinput != 'q':
+        
+        while userinput == '2':
+            userinput_for_2 = input('\nPlease Enter Manufacturer and Item Type [ex: "apple phone"]\n[m] Back to Menu\n\n>')
+                        
+            if userinput_for_2 != 'm':
+                if clean_user_input(userinput_for_2) != False: #False would mean [[]] after removing items that are not manufacturer and item_type, True would mean [[manu,item_type]], also ensuring user is not exiting out of #2 task
+                    check_inventory(clean_user_input(userinput_for_2)) #checking_inventory() only when item confirmed to be in inventory after clean_user_input()
+                    
+                    
+                
+            if userinput_for_2 == 'm':
+                break
+
             # print(userinput) 
             # print(clean_user_input(userinput))
-            if clean_user_input(userinput) != False: #False would mean [[]] after removing items that are not manufacturer and item_type, True would mean [[manu,item_type]]
-                check_inventory(clean_user_input(userinput)) #checking_inventory() only when item confirmed to be in inventory after clean_user_input()
+        
             
 
 
