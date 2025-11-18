@@ -51,8 +51,8 @@ def writing_past_service_date_csv():
 
 
 #writing DamagedInventory.csv - writing all damaged items, sorted most to least expensive, ex: DamagedInventory.csv [item_id,manufacturer,item_type,price,service_date]
-def writing_damaged_inventory_csv():
     print('\nDamaged Inventory List:')
+def writing_damaged_inventory_csv():
     damaged_inventory_list = []
     with open ('csv_outputs/DamagedInventory.csv', 'w', newline='') as damaged_inventory_csv:
         write_csv_damaged_inventory = csv.writer(damaged_inventory_csv)
@@ -62,8 +62,9 @@ def writing_damaged_inventory_csv():
 
         damaged_inventory_list.sort(key=lambda x: int(x[3]), reverse=True) #most expensive to least expensive
         write_csv_damaged_inventory.writerows(i[:-1] for i in damaged_inventory_list )
-
+    
     print("DamagedInventory.csv written successfully!")
+    return damaged_inventory_list
 
 
 
@@ -140,7 +141,7 @@ def clean_user_input(user_input):
 
         
         
-def check_inventory(user_input):
+def two_query_manu_itemType(user_input):
 
 # start finding item in inventory
 
@@ -153,7 +154,11 @@ def check_inventory(user_input):
     
     
 
-        
+def three_query_damaged_items(damaged_items_list):
+    
+    for i in damaged_items_list:
+        print(i[0],i[1], i[2],i[3], i[4])
+
 
 if __name__ == "__main__":
 
@@ -187,12 +192,20 @@ if __name__ == "__main__":
                         
             if userinput_for_2 != 'm':
                 if clean_user_input(userinput_for_2) != False: #False would mean [[]] after removing items that are not manufacturer and item_type, True would mean [[manu,item_type]], also ensuring user is not exiting out of #2 task
-                    check_inventory(clean_user_input(userinput_for_2)) #checking_inventory() only when item confirmed to be in inventory after clean_user_input()
+                    two_query_manu_itemType(clean_user_input(userinput_for_2)) #checking_inventory() only when item confirmed to be in inventory after clean_user_input()
                     
                     
                 
             if userinput_for_2 == 'm':
                 break
+        
+        if userinput == '3':
+
+            damaged_items = writing_damaged_inventory_csv() #returns the damaged_inventory_list returned in the method, writing_damaged_inventory_csv() 
+            three_query_damaged_items(damaged_items)
+
+        
+        
 
             # print(userinput) 
             # print(clean_user_input(userinput))
