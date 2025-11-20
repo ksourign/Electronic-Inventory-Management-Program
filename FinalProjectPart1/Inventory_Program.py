@@ -4,12 +4,16 @@ from Asc_Date_Sort_ServiceDatesList_csv import service_date_sorted
 from Full_Inventory_Manu_asc import full_inventory_list
 
 #writing FullInventory.csv - writing all items in inventory ex: [item_id,manufacturer,item_type,price,service_date,if_damaged]
-def writing_full_inventory_csv():
-    print('Full Inventory List:')
-    with open('csv_outputs/FullInventory.csv', 'w', newline='') as full_inventory_csv: #file obj, returns csv file
-        write_full_inventory_csv = csv.writer(full_inventory_csv) #csv writer object
-        write_full_inventory_csv.writerows(full_inventory_list)
-    print("FullInventory.csv written successfully!")
+def writing_full_inventory_csv(print_output = True): 
+    if print_output == True:
+        print('Full Inventory List:')
+        with open('csv_outputs/FullInventory.csv', 'w', newline='') as full_inventory_csv: #file obj, returns csv file
+            write_full_inventory_csv = csv.writer(full_inventory_csv) #csv writer object
+            write_full_inventory_csv.writerows(full_inventory_list)
+        print("FullInventory.csv written successfully!")
+
+    else:
+        return full_inventory_list
 
 
 #writing {Item_type}Inventory.csv - writing csv files for different item_type in inventory ex: PhoneInventory.csv [item_id,manufacturer,price,service_date,if_damaged]
@@ -114,7 +118,8 @@ def clean_user_input(user_input):
         for i in user_input[0].copy(): #looping through a copy of the list to identify elements to remove in the original list. Must do this to avoid skipping elements when modifying the original list
             if i not in manufacturer_list and i not in item_type_list:
                 user_input[0].remove(i) #THIS WILL RETURN A LIST
-        user_input = [list(set(user_input[0]))]
+        user_input = [list(set(user_input[0]))] #converting the set into a list - diff from list({user_input[0]})
+
         # print ('iam here',user_input, len(user_input[0])) #for removing duplicate manufacturerse and item_type (
         
 
@@ -187,7 +192,16 @@ def three_query_damaged_items(damaged_items_list):
     for i in damaged_items_list:
         print(i[0],i[1], i[2],i[3], i[4])
 
-
+#[6]view full inventory
+def six_query_view_full_inventory():
+    print("\nFull Inventory List:")
+    full_inventory_list = writing_full_inventory_csv(print_output = False)
+    
+    for i in full_inventory_list:
+        for j in i:   
+            print(j + " ", end="")
+        print()
+    
 
 
 
@@ -206,7 +220,6 @@ if __name__ == "__main__":
     # Part 2 (Interactive Inventory Query Capability)
     
     print('\nInventory Program')
-    
     # userinput = input("Enter manufacturer and item type [ex: 'apple phone']: ") #ex: userinput = 'apple phone'
     userinput = ""
     
@@ -222,9 +235,10 @@ if __name__ == "__main__":
         "[2] Find Items Given Manufacturer and Item Type [ex: 'apple phone']\n"
         "[3] Find Damaged Items\n"
         "[4] Find Items Past its Service Date \n"
-        "[5] Find the Most and Least Expensive Items\n\n"
+        "[5] Find the Most and Least Expensive Items\n"
+        "[6] View Full Inventory\n\n"
         "[q] Quit Inventory Program \n\n"
-        "Enter Menu Number (1-5):")
+        "Enter Menu Number (1-6):")
 
         while userinput == '1':
             return_manufacturers()
@@ -258,16 +272,14 @@ if __name__ == "__main__":
         
 
 
-
-
-
         if userinput == '3':
 
             damaged_items = writing_damaged_inventory_csv(print_output = False) #returns the damaged_inventory_list returned in the method, writing_damaged_inventory_csv() 
             three_query_damaged_items(damaged_items)
 
         
-        
+        elif userinput == '6':
+            six_query_view_full_inventory()
         
 
             # print(userinput) 
