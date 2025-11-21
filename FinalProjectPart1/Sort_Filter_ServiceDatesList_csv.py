@@ -1,4 +1,4 @@
-#Creates past_service_date_list[] - appends items past its service_date + service_date sorted asc from "ServiceDatesList.csv" (item_id, service_date)
+#Creates past_service_date_list[] - appends items past its service_date + sorts service_date asc from "ServiceDatesList.csv" (item_id, service_date)
 #Creates service_date_list[] - appends all records from "ServiceDatesList.csv" into an array
 
 #Output Format for both lists: [['item_id','service_date'], ['item2_id', 'item2_service_date']]
