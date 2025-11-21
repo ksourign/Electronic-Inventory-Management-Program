@@ -1,17 +1,31 @@
+#Electronic Inventory Management Program
+
+""" 
+Manipulates csv inputs (ManufacturerList, PriceList, ServiceDatesList) to generate csv reports for users to view the following:
+1. FullInventory.csv - all item_id data (all item_id data joined from ManufacturerList.csv, PriceList.csv, ServiceDatesList.csv)
+2. DamagedInventory.csv - all damaged items in inventory
+3. {item_type}.csv - multiple csv reports for each item type in inventory
+4. PastServiceDateInventory.csv - all items past its service_date
+
+Includes an interactive, terminal-based query capability. 
+Users will be given a menu with numbers to input into the terminal to query items from the inventory.
+"""
+
 import csv
-from datetime import datetime, date
-from Asc_Date_Sort_ServiceDatesList_csv import PastServiceDate_array
-from Full_Inventory_Manu_asc import full_inventory_list
+from sort_filter_ServiceDatesList_csv import past_service_date_list
+from join_data_for_full_inventory import full_inventory_list
 
 #writing FullInventory.csv - writing all items in inventory ex: [item_id,manufacturer,item_type,price,service_date,if_damaged]
 def writing_full_inventory_csv(print_output = True): 
-    if print_output == True:
-        print('Full Inventory List:')
-        with open('csv_outputs/FullInventory.csv', 'w', newline='') as full_inventory_csv: #file obj, returns csv file
-            write_full_inventory_csv = csv.writer(full_inventory_csv) #csv writer object
-            write_full_inventory_csv.writerows(full_inventory_list)
-        print("FullInventory.csv written successfully!")
+    
+    print('Full Inventory List:')
 
+    with open('csv_outputs/FullInventory.csv', 'w', newline='') as full_inventory_csv: #file obj, returns csv file
+        write_full_inventory_csv = csv.writer(full_inventory_csv) #csv writer object
+        write_full_inventory_csv.writerows(full_inventory_list)
+    
+    if print_output == True:
+        print("FullInventory.csv written successfully!")
     else:
         return full_inventory_list
 
@@ -42,23 +56,23 @@ def writing_past_service_date_csv(print_output = True):
 
     
     print('\nPast Service Date List:')
-    past_service_date_list = []
+    past_service_date_array = [] #itemid, manufacturer, item_type, price, service_date, if_damaged
 
     
 
     with open('csv_outputs/PastServiceDateInventory.csv', 'w', newline='') as past_service_date_csv: #creating PastServiceDateInventory csv file
         write_csv_past_service_date = csv.writer(past_service_date_csv)
-        for i in PastServiceDate_array:
+        for i in past_service_date_list:
             for j in full_inventory_list:
-                if i[0] == j[0]: #comparing item_id from service_date_sorted[] and full_inventory_list []
-                    past_service_date_list.append(j) #appending item record from full_inventory_list []
-                        
-        write_csv_past_service_date.writerows(past_service_date_list)
+                if i[0] == j[0]: #find where item_id from past_service_date_list[] and full_inventory_list[] match
+                    write_csv_past_service_date.writerow(j) #write the item row in full_inventory_list
+                    past_service_date_array.append(j)
+                    
     if print_output == True:
         print("PastServiceDateInventory.csv written successfully!")
-
+    
     else:
-        return past_service_date_list
+        return past_service_date_array
         
 
 
@@ -85,10 +99,6 @@ def writing_damaged_inventory_csv(print_output = True): #calling writing_damaged
 
 #PART 2########################################################################################################################
 
-    
-
-
-    
 def clean_user_input(user_input):
 # Returns clean user input (ex: [[manufacturer,item_type]])
     user_input = [user_input.split()] #splitting str userinput into an array (ex: user_input = "apple phone") --> (ex: [['apple','phone']])
@@ -201,9 +211,6 @@ def three_query_damaged_items(damaged_items_list):
         print(i[0],i[1], i[2],i[3], i[4])
 
 
-
-
-
 #[6]view full inventory
 def six_query_view_full_inventory():
     print("\nFull Inventory List:")
@@ -230,18 +237,15 @@ def four_query_view_past_service_date():
 
 if __name__ == "__main__":
 
-    # Part 1 (Creating CSV Outputs)
+    # Part 1 (Generating CSV Outputs)
     writing_full_inventory_csv()
     writing_item_type_csv()
     writing_past_service_date_csv()
     writing_damaged_inventory_csv()
 
 
-
-
-    # Part 2 (Interactive Inventory Query Capability)
-    
-    print('\nInventory Program')
+    # Part 2 (Interactive, Terminal-based Query Capability)
+    print('\nElectronic Inventory Management Program')
     # userinput = input("Enter manufacturer and item type [ex: 'apple phone']: ") #ex: userinput = 'apple phone'
     userinput = ""
     
@@ -260,7 +264,7 @@ if __name__ == "__main__":
         "[5] View Most and Least Expensive Items\n"
         "[6] View Full Inventory\n\n"
         "[q] Quit Inventory Program \n\n"
-        "Enter Menu Number (1-6):")
+        "Enter Menu Number [1-6]:")
 
         while userinput == '1':
             return_manufacturers()
@@ -306,6 +310,9 @@ if __name__ == "__main__":
 
         elif userinput == '4':
             four_query_view_past_service_date()
+            userinput_for_task = input('\n[m] to go Back to Menu:')
+            userinput_for_task = ""
+            
 
             # print(userinput) 
             # print(clean_user_input(userinput))
