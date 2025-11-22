@@ -13,10 +13,11 @@ Users will be given a menu with numbers to input into the terminal to query item
 
 import csv
 from sort_filter_ServiceDatesList_csv import past_service_date_list
-from join_data_for_full_inventory import full_inventory_list
+from join_inventory_data import full_inventory_list
 
 #writing FullInventory.csv - writing all items in inventory ex: [item_id,manufacturer,item_type,price,service_date,if_damaged]
 def writing_full_inventory_csv(print_output = True): 
+    
     
     print('Full Inventory List:')
 
@@ -54,11 +55,9 @@ def writing_item_type_csv():
 #writing PastServiceDateInventory.csv - writing all items where today's date is greater than an item's service date, ex: PastServiceDateInventory.csv [item_id,manufacturer,item_type,price,service_date,if_damaged]
 def writing_past_service_date_csv(print_output = True):
 
-    
-    print('\nPast Service Date List:')
+    if print_output == True:
+        print('\nPast Service Date List:')
     past_service_date_array = [] #itemid, manufacturer, item_type, price, service_date, if_damaged
-
-    
 
     with open('csv_outputs/PastServiceDateInventory.csv', 'w', newline='') as past_service_date_csv: #creating PastServiceDateInventory csv file
         write_csv_past_service_date = csv.writer(past_service_date_csv)
@@ -70,7 +69,6 @@ def writing_past_service_date_csv(print_output = True):
                     
     if print_output == True:
         print("PastServiceDateInventory.csv written successfully!")
-    
     else:
         return past_service_date_array
         
@@ -213,7 +211,7 @@ def three_query_damaged_items(damaged_items_list):
 
 #[6]view full inventory
 def six_query_view_full_inventory():
-    print("\nFull Inventory List:")
+    print()
     full_inventory_list = writing_full_inventory_csv(print_output = False)
     
     for i in full_inventory_list:
@@ -222,6 +220,7 @@ def six_query_view_full_inventory():
         print()
     
 
+#[4]view items past its service date
 def four_query_view_past_service_date():
     
     items_past_service_date = []
@@ -232,6 +231,46 @@ def four_query_view_past_service_date():
     for i in items_past_service_date:
         for j in i:
             print(j + " ", end="")
+        print()
+
+
+#[7] View Items from Most Expensive to Cheapest, also printing out max and min
+def five_query_view_price_desc():
+    inventory_price_sorted = full_inventory_list.copy() #copying full_inventory_list
+    inventory_price_sorted.sort(key=lambda x: int(x[3]), reverse = True) #sorting price desc of each item
+
+    #printing the item data
+    for i in inventory_price_sorted:
+        for j in i:
+            if j == i[3]:
+                print(f'${j}.00 ', end="")
+            else:
+                print(j + " ", end="")
+        print()
+    print()
+
+    #storing most expensive and least expensive item in format [[]]
+    most_expensive = [max(inventory_price_sorted, key = lambda x: int(x[3]))]
+    least_expensive = [min(inventory_price_sorted, key = lambda x: int(x[3]))]
+
+    #printing most_expensive item data
+    for i in most_expensive:
+        print("Most Expensive Item: ", end="")
+        for j in i:
+            if j == i[3]:
+                print(f'${j}.00 ', end="")
+            else:
+                print(j + " ", end="")
+        print()
+
+    #printing least_expensive item data
+    for i in least_expensive:
+        print("Least Expensive Item: ", end="")
+        for j in i:
+            if j == i[3]:
+                print(f'${j}.00 ', end="")
+            else:
+                print(j + " ", end="")
         print()
 
 
@@ -249,8 +288,6 @@ if __name__ == "__main__":
     # userinput = input("Enter manufacturer and item type [ex: 'apple phone']: ") #ex: userinput = 'apple phone'
     userinput = ""
     
-    
-
     while userinput != 'q':
         # if type(userinput) == str and len(userinput) != 0:
         #     print("Enter a Valid Menu Number (1-5)")
@@ -261,9 +298,11 @@ if __name__ == "__main__":
         "[2] View Items Given Manufacturer and Item Type [ex: 'apple phone']\n"
         "[3] View Damaged Items\n"
         "[4] View Items Past its Service Date \n"
-        "[5] View Most and Least Expensive Items\n"
+        "[5] View Items from Most to Least Expensive\n"
         "[6] View Full Inventory\n\n"
+
         "[q] Quit Inventory Program \n\n"
+
         "Enter Menu Number [1-6]:")
 
         while userinput == '1':
@@ -303,15 +342,25 @@ if __name__ == "__main__":
             damaged_items = writing_damaged_inventory_csv(print_output = False) #returns the damaged_inventory_list returned in the method, writing_damaged_inventory_csv() 
             three_query_damaged_items(damaged_items)
 
-        
-        elif userinput == '6':
-            six_query_view_full_inventory()
-        
+            userinput_for_task = input('\n[m] to go Back to Menu:')
+            userinput_for_task = ""
 
         elif userinput == '4':
             four_query_view_past_service_date()
             userinput_for_task = input('\n[m] to go Back to Menu:')
             userinput_for_task = ""
+
+        elif userinput == '5':
+            five_query_view_price_desc()
+            userinput_for_task = input('\n[m] to go Back to Menu:')
+            userinput_for_task = ""
+        
+        
+        elif userinput == '6':
+            six_query_view_full_inventory()
+            userinput_for_task = input('\n[m] to go Back to Menu:')
+            userinput_for_task = ""
+
             
 
             # print(userinput) 
