@@ -75,9 +75,10 @@ def writing_past_service_date_csv(print_output = True):
 
 
 #writing DamagedInventory.csv - writing all damaged items, sorted most to least expensive, ex: DamagedInventory.csv [item_id,manufacturer,item_type,price,service_date]
-    print('\nDamaged Inventory List:')
+    
 def writing_damaged_inventory_csv(print_output = True): #calling writing_damaged_inventory_csv() equates to print_output = True, #print_output = True paramater is here to control printing statement vs returning the damaged_inventory_list for a different method, three_query_damaged_items(damaged_items_list) 
-   
+    
+    print('\nDamaged Inventory List:')
     damaged_inventory_list = []
     with open ('csv_outputs/DamagedInventory.csv', 'w', newline='') as damaged_inventory_csv:
         write_csv_damaged_inventory = csv.writer(damaged_inventory_csv)
@@ -196,21 +197,21 @@ def one_query_manufacturer(user_input):
 
         
 #[2]find item in inventory given manufacturer + item_type
-def two_query_manu_itemType(user_input):
+def query_manu_itemType(user_input):
     for i in full_inventory_list: #[[],[],[]]
         if user_input[0][0] == i[1].lower() and user_input[0][1] == i[2]: #if user's manufacturer,j[0], is equal to i[1](manufacturer position) AND i[2](item_type)
             print(i[0], i[1], i[2], i[3]) #print the item_id, manufacturer, item_type, price
     
     
 #[3]find damaged items in inventory
-def three_query_damaged_items(damaged_items_list):
-    print('\nDamaged Items:\n')
+def view_damaged_items(damaged_items_list):
+    
     for i in damaged_items_list:
         print(i[0],i[1], i[2],i[3], i[4])
 
 
 #[6]view full inventory
-def six_query_view_full_inventory():
+def view_full_inventory():
     print()
     full_inventory_list = writing_full_inventory_csv(print_output = False)
     
@@ -221,7 +222,7 @@ def six_query_view_full_inventory():
     
 
 #[4]view items past its service date
-def four_query_view_past_service_date():
+def view_past_service_date():
     
     items_past_service_date = []
     print("\nItems Past its Service Date:")
@@ -234,8 +235,23 @@ def four_query_view_past_service_date():
         print()
 
 
-#[7] View Items from Most Expensive to Cheapest, also printing out max and min
-def five_query_view_price_desc():
+# [5] view items in service date
+def view_in_service_date():
+    
+    items_past_service_date = []
+    print("\nItems Past its Service Date:")
+
+    items_past_service_date = writing_past_service_date_csv(print_output = False)
+
+    for i in full_inventory_list:
+        if i[0] not in [j[0] for j in items_past_service_date]: #if item_id in full_inventory_list NOT IN the list of ALL item_id past its service date
+            for j in i:
+                print(j + " ", end="")
+            print()
+
+
+#[5] View Items from Most Expensive to Cheapest, also printing out max and min
+def view_price_desc():
     inventory_price_sorted = full_inventory_list.copy() #copying full_inventory_list
     inventory_price_sorted.sort(key=lambda x: int(x[3]), reverse = True) #sorting price desc of each item
 
@@ -274,6 +290,8 @@ def five_query_view_price_desc():
         print()
 
 
+
+
 if __name__ == "__main__":
 
     # Part 1 (Generating CSV Outputs)
@@ -281,6 +299,7 @@ if __name__ == "__main__":
     writing_item_type_csv()
     writing_past_service_date_csv()
     writing_damaged_inventory_csv()
+
 
 
     # Part 2 (Interactive, Terminal-based Query Capability)
@@ -297,15 +316,17 @@ if __name__ == "__main__":
         "[1] View Items Given Manufacturer [Ex: 'apple'] \n"
         "[2] View Items Given Manufacturer and Item Type [ex: 'apple phone']\n"
         "[3] View Damaged Items\n"
-        "[4] View Items Past its Service Date \n"
-        "[5] View Items from Most to Least Expensive\n"
-        "[6] View Full Inventory\n\n"
+        "[4] View Items Past their Service Date \n"
+        "[5] View Items within their Service Date \n"
+        "[6] View Items from Most to Least Expensive\n"
+        "[7] View Full Inventory\n\n"
 
         "[q] Quit Inventory Program \n\n"
 
-        "Enter Menu Number [1-6]:")
+        "Enter Menu Number [1-7]:")
 
-        while userinput == '1':
+
+        while userinput == '1': #View Items Given Manufacturer [Ex: 'apple']
             return_manufacturers()
             # print('Manufacturers in Inventory:\n', manufacturer_list)
             # print("Find Items Given Manufacturer [Ex: 'apple']")
@@ -321,7 +342,7 @@ if __name__ == "__main__":
                 break
 
 
-        while userinput == '2':
+        while userinput == '2': #View Items Given Manufacturer and Item Type [ex: 'apple phone']
             userinput_for_task = input('\n[m] Back to Menu\n\nEnter Manufacturer and Item Type [ex: "apple phone"]:')
                         
             if userinput_for_task != 'm':
@@ -329,38 +350,40 @@ if __name__ == "__main__":
                 # print(clean_user_input(userinput_for_task))
                 if clean_user_input(userinput_for_task) != False: #False would mean [[]] after removing items that are not manufacturer and item_type, True would mean [[manu,item_type]], also ensuring user is not exiting out of #2 task
                     print()
-                    two_query_manu_itemType(clean_user_input(userinput_for_task)) #checking_inventory() only when item confirmed to be in inventory after clean_user_input()
+                    query_manu_itemType(clean_user_input(userinput_for_task)) #checking_inventory() only when item confirmed to be in inventory after clean_user_input()
 
             if userinput_for_task == 'm':
                 userinput_for_task = ""
                 break
         
 
-
-        if userinput == '3':
-
+        if userinput == '3': #View Damaged Items
             damaged_items = writing_damaged_inventory_csv(print_output = False) #returns the damaged_inventory_list returned in the method, writing_damaged_inventory_csv() 
-            three_query_damaged_items(damaged_items)
+            view_damaged_items(damaged_items)
 
             userinput_for_task = input('\n[m] to go Back to Menu:')
             userinput_for_task = ""
 
-        elif userinput == '4':
-            four_query_view_past_service_date()
+        elif userinput == '4': #View Items Past their Service Date
+            view_past_service_date()
             userinput_for_task = input('\n[m] to go Back to Menu:')
             userinput_for_task = ""
 
-        elif userinput == '5':
-            five_query_view_price_desc()
+        elif userinput == '5': #View Items within their Service Date
+            view_in_service_date()
             userinput_for_task = input('\n[m] to go Back to Menu:')
             userinput_for_task = ""
         
         
-        elif userinput == '6':
-            six_query_view_full_inventory()
+        elif userinput == '6': #View Items from Most to Least Expensive
+            view_price_desc()
             userinput_for_task = input('\n[m] to go Back to Menu:')
             userinput_for_task = ""
 
+        elif userinput == '7': #View Full Inventory
+            view_full_inventory()
+            userinput_for_task = input('\n[m] to go Back to Menu:')
+            userinput_for_task = ""
             
 
             # print(userinput) 
