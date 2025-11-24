@@ -187,6 +187,28 @@ def return_manufacturers(print_output = True):
         return manufacturer_set
 
 
+#return unique manufacturer + item_type
+def return_manufacturers_itemType():
+    
+    dict_unique_manufacturer_itemType = {}
+    for i in full_inventory_list:
+        if i[1] not in dict_unique_manufacturer_itemType:
+            dict_unique_manufacturer_itemType[i[1]] = set()
+        dict_unique_manufacturer_itemType[i[1]].add(i[2])
+    
+    
+    dict_unique_manufacturer_itemType = {key: sorted(list(value)) for key,value in dict_unique_manufacturer_itemType.items()} #converting the value type (set) into a list to sort values asc
+    for i in dict_unique_manufacturer_itemType.items():
+        manu_item_types = i[0] + ': '
+        for j in i[1]:
+            if j != i[1][len(i[1])-1]:
+                manu_item_types += j + ', '
+            else:
+                manu_item_types += j
+        print(manu_item_types)
+    
+    return dict_unique_manufacturer_itemType
+
 
 #[1]find items in inventory given manufacturer
 def one_query_manufacturer(user_input):
@@ -305,6 +327,10 @@ if __name__ == "__main__":
     # Part 2 (Interactive, Terminal-based Query Capability)
     print('\nElectronic Inventory Management Program')
     # userinput = input("Enter manufacturer and item type [ex: 'apple phone']: ") #ex: userinput = 'apple phone'
+    
+    #testmethod
+    
+    
     userinput = ""
     
     while userinput != 'q':
@@ -313,7 +339,7 @@ if __name__ == "__main__":
         #     userinput = ""
         # else:
         userinput = input("\nInventory Query Menu: \n"
-        "[1] View Items Given Manufacturer [Ex: 'apple'] \n"
+        "[1] View Items Given Manufacturer \n"
         "[2] View Items Given Manufacturer and Item Type [ex: 'apple phone']\n"
         "[3] View Damaged Items\n"
         "[4] View Items Past their Service Date \n"
@@ -343,6 +369,11 @@ if __name__ == "__main__":
 
 
         while userinput == '2': #View Items Given Manufacturer and Item Type [ex: 'apple phone']
+
+            #show list of manufacturrs and item_type
+            print('Available Manufacturers and Item Types in Inventory:\n')
+            return_manufacturers_itemType()
+
             userinput_for_task = input('\n[m] Back to Menu\n\nEnter Manufacturer and Item Type [ex: "apple phone"]:')
                         
             if userinput_for_task != 'm':
@@ -351,7 +382,7 @@ if __name__ == "__main__":
                 if clean_user_input(userinput_for_task) != False: #False would mean [[]] after removing items that are not manufacturer and item_type, True would mean [[manu,item_type]], also ensuring user is not exiting out of #2 task
                     print()
                     query_manu_itemType(clean_user_input(userinput_for_task)) #checking_inventory() only when item confirmed to be in inventory after clean_user_input()
-
+                    print()
             if userinput_for_task == 'm':
                 userinput_for_task = ""
                 break
