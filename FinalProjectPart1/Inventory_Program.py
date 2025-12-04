@@ -177,12 +177,19 @@ def return_manufacturers(print_output = True):
     manufacturer_set = set() #using a set bc we want to remove duplicate manufacturers. 
 
     for i in full_inventory_list:
-        manufacturer_set.add(i[1].lower()) #Bc it's a set, duplicates will be checked before added into the set
+        manufacturer_set.add(i[1].capitalize()) #Bc it's a set, duplicates will be checked before added into the set
     
+    manufacturer_set = list(manufacturer_set) #turning set into a list to use indexing
+    manufacturer_set.sort()
+
+
     if print_output == True:
-        print('Manufacturers In Inventory:')
+        print('Manufacturers In Inventory: ', end="")
         for i in manufacturer_set:
-            print(i.capitalize())
+            if i != manufacturer_set[len(manufacturer_set)-1]:
+                print(i + ", ", end="")
+            else:
+                print(i, end="")
     else:
         return manufacturer_set
 
@@ -212,9 +219,10 @@ def return_manufacturers_itemType():
 
 #[1]find items in inventory given manufacturer
 def one_query_manufacturer(user_input):
+    print("\nOutput:")
     for i in full_inventory_list:
-        if i[1].lower() == user_input:
-            print(i[0],i[1], i[2], i[3],i[4])
+        if i[1].lower() == user_input.lower():
+            print(i[0],i[1], i[2], f'${i[3]}.00',i[4])
 
 
         
@@ -238,10 +246,12 @@ def view_full_inventory():
     full_inventory_list = writing_full_inventory_csv(print_output = False)
     
     for i in full_inventory_list:
-        for j in i:   
-            print(j + " ", end="")
+        for j in i:
+            if j == i[3]:
+                print (f'${j}.00 ', end="")
+            else:
+                print(j + " ", end="")
         print()
-    
 
 #[4]view items past its service date
 def view_past_service_date():
@@ -358,7 +368,7 @@ if __name__ == "__main__":
             # print("Find Items Given Manufacturer [Ex: 'apple']")
             
             # list avaialble manufacturers
-            userinput_for_task = input('\n[m] Back to Menu\n\nFind Items Given Manufacturer [Ex: "apple"]:')
+            userinput_for_task = input('\n[m] Back to Menu\n\nFind Items Given Manufacturer:')
             if userinput_for_task != 'm':
                 one_query_manufacturer(userinput_for_task)
                 print()
