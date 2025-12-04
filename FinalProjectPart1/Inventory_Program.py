@@ -1,4 +1,4 @@
-#Electronic Inventory Management Program (testing)
+#Electronic Inventory Management Program
 
 """ 
 Manipulates csv inputs (ManufacturerList, PriceList, ServiceDatesList) to generate csv reports for users to view the following:
@@ -153,12 +153,12 @@ def clean_user_input(user_input):
     if len(user_input[0]) == 2:
         #correct format inputted [[manufacturer,item_type]]
         # print( 'len = 2 method',user_input )
-        if user_input[0][0] in manufacturer_list and user_input[0][1] in item_type_list: #checks if user_input = [[manufacturer,item_type]]
+        if user_input[0][0].capitalize() in manufacturer_list and user_input[0][1].lower() in item_type_list: #checks if user_input = [[manufacturer,item_type]]
             # print( 'correct input from user',user_input )
             return user_input
         
         #correct format inputted but reversed [[item_type, manufacturer]]
-        elif user_input[0][0] in item_type_list and user_input[0][1] in manufacturer_list: #checks if user_input = [[item_type,manufacturer]]
+        elif user_input[0][0].lower() in item_type_list and user_input[0][1].capitalize() in manufacturer_list: #checks if user_input = [[item_type,manufacturer]]
             user_input[0].reverse() #reverse user_input
             # print('this is reversed', user_input)
             return user_input
@@ -177,7 +177,7 @@ def return_manufacturers(print_output = True):
     manufacturer_set = set() #using a set bc we want to remove duplicate manufacturers. 
 
     for i in full_inventory_list:
-        manufacturer_set.add(i[1].capitalize()) #Bc it's a set, duplicates will be checked before added into the set
+        manufacturer_set.add(i[1]) #Bc it's a set, duplicates will be checked before added into the set
     
     manufacturer_set = list(manufacturer_set) #turning set into a list to use indexing
     manufacturer_set.sort()
@@ -219,25 +219,28 @@ def return_manufacturers_itemType():
 
 #[1]find items in inventory given manufacturer
 def one_query_manufacturer(user_input):
-    print("\nOutput:")
+    print("__________________________________________________________________")
+    print("Output:")
     for i in full_inventory_list:
-        if i[1].lower() == user_input.lower():
+        if i[1] == user_input.capitalize():
             print(i[0],i[1], i[2], f'${i[3]}.00',i[4])
-
+    print("__________________________________________________________________")
 
         
 #[2]find item in inventory given manufacturer + item_type
 def query_manu_itemType(user_input):
+    print("__________________________________________________________________")
+    print("Output:")
     for i in full_inventory_list: #[[],[],[]]
         if user_input[0][0] == i[1].lower() and user_input[0][1] == i[2]: #if user's manufacturer,j[0], is equal to i[1](manufacturer position) AND i[2](item_type)
-            print(i[0], i[1], i[2], i[3]) #print the item_id, manufacturer, item_type, price
-    
+            print(i[0], i[1], i[2], f'${i[3]}.00') #print the item_id, manufacturer, item_type, price
+    print("__________________________________________________________________")
     
 #[3]find damaged items in inventory
 def view_damaged_items(damaged_items_list):
-    
     for i in damaged_items_list:
         print(i[0],i[1], i[2],i[3], i[4])
+    print("__________________________________________________________________")
 
 
 #[6]view full inventory
@@ -350,19 +353,20 @@ if __name__ == "__main__":
         # else:
         userinput = input("\nInventory Query Menu: \n"
         "[1] View Items Given Manufacturer \n"
-        "[2] View Items Given Manufacturer and Item Type [ex: 'apple phone']\n"
+        "[2] View Items Given Manufacturer and Item Type\n"
         "[3] View Damaged Items\n"
         "[4] View Items Past their Service Date \n"
         "[5] View Items within their Service Date \n"
         "[6] View Items from Most to Least Expensive\n"
         "[7] View Full Inventory\n\n"
 
-        "[q] Quit Inventory Program \n\n"
-
+        "[q] Quit Inventory Program \n"
+        "__________________________________________________________________\n\n"
         "Enter Menu Number [1-7]:")
 
 
         while userinput == '1': #View Items Given Manufacturer [Ex: 'apple']
+            print()
             return_manufacturers()
             # print('Manufacturers in Inventory:\n', manufacturer_list)
             # print("Find Items Given Manufacturer [Ex: 'apple']")
@@ -371,7 +375,7 @@ if __name__ == "__main__":
             userinput_for_task = input('\n[m] Back to Menu\n\nFind Items Given Manufacturer:')
             if userinput_for_task != 'm':
                 one_query_manufacturer(userinput_for_task)
-                print()
+                
 
             if userinput_for_task == 'm':
                 userinput_for_task = ""
@@ -379,7 +383,7 @@ if __name__ == "__main__":
 
 
         while userinput == '2': #View Items Given Manufacturer and Item Type [ex: 'apple phone']
-
+            print() 
             #show list of manufacturrs and item_type
             print('Available Manufacturers and Item Types in Inventory:\n')
             return_manufacturers_itemType()
@@ -399,6 +403,7 @@ if __name__ == "__main__":
         
 
         if userinput == '3': #View Damaged Items
+            print("__________________________________________________________________", end="")
             damaged_items = writing_damaged_inventory_csv(print_output = False) #returns the damaged_inventory_list returned in the method, writing_damaged_inventory_csv() 
             view_damaged_items(damaged_items)
 
