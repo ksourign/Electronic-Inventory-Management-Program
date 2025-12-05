@@ -57,6 +57,7 @@ def writing_past_service_date_csv(print_output = True):
 
     if print_output == True:
         print('\nPast Service Date List:')
+    
     past_service_date_array = [] #itemid, manufacturer, item_type, price, service_date, if_damaged
 
     with open('csv_outputs/PastServiceDateInventory.csv', 'w', newline='') as past_service_date_csv: #creating PastServiceDateInventory csv file
@@ -77,8 +78,9 @@ def writing_past_service_date_csv(print_output = True):
 #writing DamagedInventory.csv - writing all damaged items, sorted most to least expensive, ex: DamagedInventory.csv [item_id,manufacturer,item_type,price,service_date]
     
 def writing_damaged_inventory_csv(print_output = True): #calling writing_damaged_inventory_csv() equates to print_output = True, #print_output = True paramater is here to control printing statement vs returning the damaged_inventory_list for a different method, three_query_damaged_items(damaged_items_list) 
-    
-    print('\nDamaged Inventory List:')
+    if print_output == True:
+        print('\nDamaged Inventory List:')
+
     damaged_inventory_list = []
     with open ('csv_outputs/DamagedInventory.csv', 'w', newline='') as damaged_inventory_csv:
         write_csv_damaged_inventory = csv.writer(damaged_inventory_csv)
@@ -105,7 +107,7 @@ def clean_user_input(user_input):
     #checking if user inputs a manufacturer and an item_type
     # print(user_input)
     manufacturer_list = return_manufacturers(print_output = False)
-
+    # print('manu list', manufacturer_list)
 
 
     # manufacturer_list = {i[1].lower() for i in full_inventory_list} #created a set to remove duplicate manufacturers
@@ -133,7 +135,7 @@ def clean_user_input(user_input):
     
     elif len(user_input[0]) > 2:
         for i in user_input[0].copy(): #looping through a copy of the list to identify elements to remove in the original list. Must do this to avoid skipping elements when modifying the original list
-            if i not in manufacturer_list and i not in item_type_list:
+            if i.capitalize() not in manufacturer_list and i not in item_type_list:
                 user_input[0].remove(i) #THIS WILL RETURN A LIST
         user_input = [list(set(user_input[0]))] #converting the set into a list - diff from list({user_input[0]})
 
@@ -164,7 +166,9 @@ def clean_user_input(user_input):
             return user_input
         
         else: #samsung samsung?
+            print("__________________________________________________________________")
             print(f"No such item in inventory i am here {user_input}")
+            print("__________________________________________________________________")
             return False
 
     else: #for when len(user_input) = 0 or (ex: after cleaning process: [['x', 'z']] -> [[]])
@@ -238,8 +242,9 @@ def query_manu_itemType(user_input):
     
 #[3]find damaged items in inventory
 def view_damaged_items(damaged_items_list):
+    print('\nDamaged Inventory List:')
     for i in damaged_items_list:
-        print(i[0],i[1], i[2],i[3], i[4])
+        print(i[0],i[1], i[2],f'${i[3]}.00', i[4])
     print("__________________________________________________________________")
 
 
@@ -255,35 +260,45 @@ def view_full_inventory():
             else:
                 print(j + " ", end="")
         print()
+    
+    print("__________________________________________________________________")
 
 #[4]view items past its service date
 def view_past_service_date():
     
     items_past_service_date = []
-    print("\nItems Past its Service Date:")
+
+    print("\nItems Past their Service Date:")
 
     items_past_service_date = writing_past_service_date_csv(print_output = False)
 
     for i in items_past_service_date:
         for j in i:
-            print(j + " ", end="")
+            if j == i[3]:
+                print(f'${j}.00 ', end="")
+            else:
+                print(j + " ", end="")
         print()
+    print("__________________________________________________________________")
 
 
 # [5] view items in service date
 def view_in_service_date():
     
     items_past_service_date = []
-    print("\nItems Past its Service Date:")
+    print("\nItems within their Service Date:")
 
     items_past_service_date = writing_past_service_date_csv(print_output = False)
 
     for i in full_inventory_list:
         if i[0] not in [j[0] for j in items_past_service_date]: #if item_id in full_inventory_list NOT IN the list of ALL item_id past its service date
             for j in i:
-                print(j + " ", end="")
+                if j == i[3]:
+                    print(f'${j}.00 ', end="")
+                else:
+                    print(j + " ", end="")
             print()
-
+    print("__________________________________________________________________")
 
 #[5] View Items from Most Expensive to Cheapest, also printing out max and min
 def view_price_desc():
@@ -363,73 +378,105 @@ if __name__ == "__main__":
         "[q] Quit Inventory Program \n"
         "__________________________________________________________________\n\n"
         "Enter Menu Number [1-7]:")
-
+        
+        
+        if userinput == '1':
+            print("View Items Given Manufacturer")
+            print('\n[m] Back to Menu')
+        elif userinput == '2':
+            print("View Items Given Manufacturer and Item Type")
+            print('\n[m] Back to Menu')
+        elif userinput == '3':
+            print("View Damaged Items")
+            print('\n[m] Back to Menu')
+        elif userinput == '4':
+            print("View Items Past their Service Date")
+            print('\n[m] Back to Menu')
+        elif userinput == '5':
+            print("View Items within their Service Date")
+            print('\n[m] Back to Menu')
+        elif userinput == '6':
+            print("View Items from Most to Least Expensive")
+            print('\n[m] Back to Menu')
+        elif userinput == '7':
+            print("View Full Inventory")
+            print('\n[m] Back to Menu')
+            
+        
+        print("__________________________________________________________________")
 
         while userinput == '1': #View Items Given Manufacturer [Ex: 'apple']
             print()
-            return_manufacturers()
-            # print('Manufacturers in Inventory:\n', manufacturer_list)
-            # print("Find Items Given Manufacturer [Ex: 'apple']")
             
-            # list avaialble manufacturers
-            userinput_for_task = input('\n[m] Back to Menu\n\nFind Items Given Manufacturer:')
+            return_manufacturers()
+            print('\n')
+            # print("\n\n[m] Back to Menu\n")
+            userinput_for_task = input('Enter Manufacturer:')
             if userinput_for_task != 'm':
                 one_query_manufacturer(userinput_for_task)
                 
 
             if userinput_for_task == 'm':
+                print("__________________________________________________________________")
                 userinput_for_task = ""
                 break
 
 
         while userinput == '2': #View Items Given Manufacturer and Item Type [ex: 'apple phone']
-            print() 
+            
             #show list of manufacturrs and item_type
-            print('Available Manufacturers and Item Types in Inventory:\n')
+            print('\nAvailable Manufacturers and Item Types in Inventory:\n')
             return_manufacturers_itemType()
+            print()
 
-            userinput_for_task = input('\n[m] Back to Menu\n\nEnter Manufacturer and Item Type [ex: "apple phone"]:')
+            userinput_for_task = input('Enter Manufacturer and Item Type [ex: "apple phone"]:')
                         
             if userinput_for_task != 'm':
                 # print(userinput_for_task)
                 # print(clean_user_input(userinput_for_task))
                 if clean_user_input(userinput_for_task) != False: #False would mean [[]] after removing items that are not manufacturer and item_type, True would mean [[manu,item_type]], also ensuring user is not exiting out of #2 task
-                    print()
+                    
                     query_manu_itemType(clean_user_input(userinput_for_task)) #checking_inventory() only when item confirmed to be in inventory after clean_user_input()
-                    print()
+                    
             if userinput_for_task == 'm':
+                print("__________________________________________________________________")
                 userinput_for_task = ""
                 break
-        
+            
 
         if userinput == '3': #View Damaged Items
-            print("__________________________________________________________________", end="")
+            
             damaged_items = writing_damaged_inventory_csv(print_output = False) #returns the damaged_inventory_list returned in the method, writing_damaged_inventory_csv() 
             view_damaged_items(damaged_items)
 
             userinput_for_task = input('\n[m] to go Back to Menu:')
             userinput_for_task = ""
+            print("__________________________________________________________________")
 
         elif userinput == '4': #View Items Past their Service Date
             view_past_service_date()
             userinput_for_task = input('\n[m] to go Back to Menu:')
             userinput_for_task = ""
+            print("__________________________________________________________________")
 
         elif userinput == '5': #View Items within their Service Date
             view_in_service_date()
             userinput_for_task = input('\n[m] to go Back to Menu:')
             userinput_for_task = ""
+            print("__________________________________________________________________")
         
         
         elif userinput == '6': #View Items from Most to Least Expensive
             view_price_desc()
             userinput_for_task = input('\n[m] to go Back to Menu:')
             userinput_for_task = ""
+            print("__________________________________________________________________")
 
         elif userinput == '7': #View Full Inventory
             view_full_inventory()
             userinput_for_task = input('\n[m] to go Back to Menu:')
             userinput_for_task = ""
+            print("__________________________________________________________________")
             
 
             # print(userinput) 
