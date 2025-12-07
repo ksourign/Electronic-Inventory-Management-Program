@@ -302,6 +302,7 @@ def view_in_service_date():
 
 #[5] View Items from Most Expensive to Cheapest, also printing out max and min
 def view_price_desc():
+    print('View Items from Most to Least Expensive:')
     inventory_price_sorted = full_inventory_list.copy() #copying full_inventory_list
     inventory_price_sorted.sort(key=lambda x: int(x[3]), reverse = True) #sorting price desc of each item
 
@@ -339,6 +340,7 @@ def view_price_desc():
                 print(j + " ", end="")
         print()
 
+    print("__________________________________________________________________")
 
 
 
@@ -467,6 +469,7 @@ if __name__ == "__main__":
         
         
         elif userinput == '6': #View Items from Most to Least Expensive
+            
             view_price_desc()
             userinput_for_task = input('\n[m] to go Back to Menu:')
             userinput_for_task = ""

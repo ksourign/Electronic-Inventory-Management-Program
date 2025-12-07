@@ -45,6 +45,8 @@ for i in manufacturerList_sorted:
             
                 full_inventory_list.append(item_id_data_joined) #appends the new item record that includes [item_id,manufacturer, item_type, item_price,service_date,if_damaged] into full_inventory_list[]
 
+full_inventory_list.sort(key=lambda x: (x[1],x[2],datetime.strptime(x[4],"%m/%d/%Y").date()))
+
 if (__name__ == "__main__"):
     print('manufacturerList_sorted', manufacturerList_sorted)
     print()
