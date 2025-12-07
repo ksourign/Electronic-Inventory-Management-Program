@@ -235,9 +235,17 @@ def one_query_manufacturer(user_input):
 def query_manu_itemType(user_input):
     print("__________________________________________________________________")
     print("Output:")
+
+    item_count = 0
+
     for i in full_inventory_list: #[[],[],[]]
         if user_input[0][0] == i[1].lower() and user_input[0][1] == i[2]: #if user's manufacturer,j[0], is equal to i[1](manufacturer position) AND i[2](item_type)
             print(i[0], i[1], i[2], f'${i[3]}.00') #print the item_id, manufacturer, item_type, price
+            item_count += 1
+
+        elif i == full_inventory_list[len(full_inventory_list)-1] and item_count == 0:
+            print('No Item in Inventory')
+            
     print("__________________________________________________________________")
     
 #[3]find damaged items in inventory
