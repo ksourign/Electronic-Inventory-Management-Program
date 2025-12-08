@@ -121,8 +121,14 @@ def clean_user_input(user_input):
     # Error Message: Wrong Format Inputted. Please Try Again [ex: "apple phone"]
     # if user_input includes more than just manufacturer and item_type (more than len of 2)
     if len(user_input[0]) < 2:
-        print ('Wrong Format Inputted. Please Try Again [ex: "apple phone"]', user_input)
-        return False
+        if user_input[0][0].capitalize() in manufacturer_list:
+            return user_input[0][0]
+        else:
+            return 'TESTING'
+            # print ('Wrong Format Inputted. Please Try Again [ex: "apple phone"]', user_input)
+            
+        # else:
+            return user_input
     
 
     # Clean user input:
@@ -226,6 +232,7 @@ def return_manufacturers_itemType():
 def one_query_manufacturer(user_input):
     print("__________________________________________________________________")
     print("Output:")
+
     for i in full_inventory_list:
         if i[1] == user_input.capitalize():
             print(i[0],i[1], i[2], f'${i[3]}.00',i[4])
@@ -396,26 +403,22 @@ if __name__ == "__main__":
         
         if userinput == '1':
             print("View Items Given Manufacturer")
-            print('\n[m] Back to Menu')
         elif userinput == '2':
             print("View Items Given Manufacturer and Item Type")
-            print('\n[m] Back to Menu')
+
         elif userinput == '3':
             print("View Damaged Items")
-            print('\n[m] Back to Menu')
+
         elif userinput == '4':
             print("View Items Past their Service Date")
-            print('\n[m] Back to Menu')
+
         elif userinput == '5':
             print("View Items within their Service Date")
-            print('\n[m] Back to Menu')
         elif userinput == '6':
             print("View Items from Most to Least Expensive")
-            print('\n[m] Back to Menu')
         elif userinput == '7':
             print("View Full Inventory")
-            print('\n[m] Back to Menu')
-            
+         
         
         print("__________________________________________________________________")
 
@@ -425,9 +428,11 @@ if __name__ == "__main__":
             return_manufacturers()
             print('\n')
             # print("\n\n[m] Back to Menu\n")
+            print('[m] Back to Menu')
             userinput_for_task = input('Enter Manufacturer:')
+            
             if userinput_for_task != 'm':
-                one_query_manufacturer(userinput_for_task)
+                one_query_manufacturer(clean_user_input(userinput_for_task))
                 
 
             if userinput_for_task == 'm':
