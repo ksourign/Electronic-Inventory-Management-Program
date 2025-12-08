@@ -14,6 +14,7 @@ Users will be given a menu with numbers to input into the terminal to query item
 import csv
 from sort_filter_ServiceDatesList_csv import past_service_date_list
 from join_inventory_data import full_inventory_list
+from datetime import datetime, date
 
 #writing FullInventory.csv - writing all items in inventory ex: [item_id,manufacturer,item_type,price,service_date,if_damaged]
 def writing_full_inventory_csv(print_output = True): 
@@ -88,7 +89,7 @@ def writing_damaged_inventory_csv(print_output = True): #calling writing_damaged
             if len(i) == 6: #item records w/len of 6 indicates that it is damaged (Ex: ['7346234', 'Lenovo', 'laptop', '239', '9/1/2020', 'damaged'] vs ['1009453', 'Lenovo', 'tower', '599', '10/1/2020'])
                 damaged_inventory_list.append(i)
 
-        damaged_inventory_list.sort(key=lambda x: int(x[3]), reverse=True) #most expensive to least expensive
+        damaged_inventory_list.sort(key=lambda x: (-int(x[3]),datetime.strptime(x[4],"%m/%d/%Y").date())) #most expensive to least expensive
         write_csv_damaged_inventory.writerows(i[:-1] for i in damaged_inventory_list )
     
     if print_output == True:
@@ -231,6 +232,7 @@ def one_query_manufacturer(user_input):
     print("__________________________________________________________________")
 
         
+
 #[2]find item in inventory given manufacturer + item_type
 def query_manu_itemType(user_input):
     print("__________________________________________________________________")
@@ -247,7 +249,9 @@ def query_manu_itemType(user_input):
             print('No Item in Inventory')
             
     print("__________________________________________________________________")
-    
+
+
+
 #[3]find damaged items in inventory
 def view_damaged_items(damaged_items_list):
     print('\nDamaged Inventory List:')
