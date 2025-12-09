@@ -448,6 +448,7 @@ if __name__ == "__main__":
             return_manufacturers_itemType()
             print()
 
+            print('[m] Back to Menu')
             userinput_for_task = input('Enter Manufacturer and Item Type [ex: "apple phone"]:')
                         
             if userinput_for_task != 'm':
@@ -468,8 +469,14 @@ if __name__ == "__main__":
             damaged_items = writing_damaged_inventory_csv(print_output = False) #returns the damaged_inventory_list returned in the method, writing_damaged_inventory_csv() 
             view_damaged_items(damaged_items)
 
-            userinput_for_task = input('\n[m] to go Back to Menu:')
-            userinput_for_task = ""
+            userinput_for_task = input('\nEnter [m] to go Back to Menu:')
+            
+            
+            while userinput_for_task != 'm':
+                
+                userinput_for_task = input('Enter[m] to go Back to Menu:')
+
+            # userinput_for_task = ""
             print("__________________________________________________________________")
 
         elif userinput == '4': #View Items Past their Service Date
