@@ -302,10 +302,10 @@ def view_past_service_date():
 
 
 # [5] view items in service date
-def view_in_service_date():
     
+def view_in_service_date():
     items_past_service_date = []
-    print("\nItems within their Service Date:")
+    print("\nInventory Past their Service Date:")
 
     items_past_service_date = writing_past_service_date_csv(print_output = False)
 
@@ -319,9 +319,9 @@ def view_in_service_date():
             print()
     print("__________________________________________________________________")
 
-#[5] View Items from Most Expensive to Cheapest, also printing out max and min
+#View Items from Most Expensive to Cheapest, also printing out max and min
 def view_price_desc():
-    print('View Items from Most to Least Expensive:')
+    print('\nInventory from Most to Least Expensive:')
     inventory_price_sorted = full_inventory_list.copy() #copying full_inventory_list
     inventory_price_sorted.sort(key=lambda x: int(x[3]), reverse = True) #sorting price desc of each item
 
@@ -333,35 +333,26 @@ def view_price_desc():
             else:
                 print(j + " ", end="")
         print()
-    print()
-
-    #storing most expensive and least expensive item in format [[]]
-    most_expensive = [max(inventory_price_sorted, key = lambda x: int(x[3]))]
-    least_expensive = [min(inventory_price_sorted, key = lambda x: int(x[3]))]
-
-    #printing most_expensive item data
-    for i in most_expensive:
-        print("Most Expensive Item: ", end="")
-        for j in i:
-            if j == i[3]:
-                print(f'${j}.00 ', end="")
-            else:
-                print(j + " ", end="")
-        print()
-
-    #printing least_expensive item data
-    for i in least_expensive:
-        print("Least Expensive Item: ", end="")
-        for j in i:
-            if j == i[3]:
-                print(f'${j}.00 ', end="")
-            else:
-                print(j + " ", end="")
-        print()
 
     print("__________________________________________________________________")
 
+#View Undamaged Items
+def view_undamaged_items(damaged_items_list):
+    print("\nUndamaged Inventory:")
+    for i in full_inventory_list:
+        if i[0] not in [j[0] for j in damaged_items_list]:
+            
+            for j in i:
+                if j == i[3]:
+                    print(f'${j}.00 ', end="")
+                else:
+                    print(j + " ", end="")
+            print()
+    print("__________________________________________________________________")
 
+  
+
+#i want to print it ONCE it finishes the full inventory loop
 
 if __name__ == "__main__":
 
@@ -391,33 +382,41 @@ if __name__ == "__main__":
         "[1] View Items Given Manufacturer \n"
         "[2] View Items Given Manufacturer and Item Type\n"
         "[3] View Damaged Items\n"
-        "[4] View Items Past their Service Date \n"
-        "[5] View Items within their Service Date \n"
-        "[6] View Items from Most to Least Expensive\n"
-        "[7] View Full Inventory\n\n"
+        "[4] View Undamaged Items\n"
+        "[5] View Items Past their Service Date \n"
+        "[6] View Items within their Service Date \n"
+        "[7] View Items from Most to Least Expensive\n"
+        "[8] View Full Inventory\n\n"
 
         "[q] Quit Inventory Program \n"
         "__________________________________________________________________\n\n"
-        "Enter Menu Number [1-7]:")
+        "Enter Menu Number [1-8]:")
         
         
         if userinput == '1':
-            print("View Items Given Manufacturer")
+            print("[1] View Items Given Manufacturer")
+
         elif userinput == '2':
-            print("View Items Given Manufacturer and Item Type")
+            print("[2] View Items Given Manufacturer and Item Type")
 
         elif userinput == '3':
-            print("View Damaged Items")
+            print("[3] View Damaged Items")
+
 
         elif userinput == '4':
-            print("View Items Past their Service Date")
-
+            print("[4]View Undamaged Items")
+              
         elif userinput == '5':
-            print("View Items within their Service Date")
+            print("[5] View Items Past their Service Date")
+
         elif userinput == '6':
-            print("View Items from Most to Least Expensive")
+            print("[6] View Items within their Service Date")
+            
         elif userinput == '7':
-            print("View Full Inventory")
+            print("[7] View Items from Most to Least Expensive")
+
+        elif userinput == '8':
+            print("[8] View Full Inventory")
          
         
         print("__________________________________________________________________")
@@ -428,12 +427,11 @@ if __name__ == "__main__":
             return_manufacturers()
             print('\n')
             # print("\n\n[m] Back to Menu\n")
-            print('[m] Back to Menu')
+            print('Enter [m] to return to Menu')
             userinput_for_task = input('Enter Manufacturer:')
             
             if userinput_for_task != 'm':
-                one_query_manufacturer(clean_user_input(userinput_for_task))
-                
+                one_query_manufacturer(clean_user_input(userinput_for_task))    
 
             if userinput_for_task == 'm':
                 print("__________________________________________________________________")
@@ -448,7 +446,7 @@ if __name__ == "__main__":
             return_manufacturers_itemType()
             print()
 
-            print('[m] Back to Menu')
+            print('Enter [m] to return to Menu')
             userinput_for_task = input('Enter Manufacturer and Item Type [ex: "apple phone"]:')
                         
             if userinput_for_task != 'm':
@@ -469,40 +467,61 @@ if __name__ == "__main__":
             damaged_items = writing_damaged_inventory_csv(print_output = False) #returns the damaged_inventory_list returned in the method, writing_damaged_inventory_csv() 
             view_damaged_items(damaged_items)
 
-            userinput_for_task = input('\nEnter [m] to go Back to Menu:')
-            
+            userinput_for_task = input('\nEnter [m] to return to Menu:')
             
             while userinput_for_task != 'm':
                 
-                userinput_for_task = input('Enter[m] to go Back to Menu:')
+                userinput_for_task = input('Enter[m] to return to Menu:')
 
             # userinput_for_task = ""
             print("__________________________________________________________________")
 
-        elif userinput == '4': #View Items Past their Service Date
-            view_past_service_date()
-            userinput_for_task = input('\n[m] to go Back to Menu:')
-            userinput_for_task = ""
+
+        elif userinput == '4': #View Undamaged Items
+            ######new method
+            damaged_items = writing_damaged_inventory_csv(print_output = False) #returns the damaged_inventory_list returned in the method, writing_damaged_inventory_csv() 
+            view_undamaged_items(damaged_items)
+            
+            userinput_for_task = input('\nEnter [m] to return to Menu:')
+
+            while userinput_for_task != 'm':
+                
+                userinput_for_task = input('Enter [m] to return to Menu:')
             print("__________________________________________________________________")
 
-        elif userinput == '5': #View Items within their Service Date
+
+        elif userinput == '5': #View Items Past their Service Date
+            view_past_service_date()
+            userinput_for_task = input('\nEnter [m] to return to Menu:')
+            
+            while userinput_for_task != 'm':
+                userinput_for_task = input('Enter[m] to return to Menu:')
+
+            print("__________________________________________________________________")
+
+
+        elif userinput == '6': #View Items within their Service Date
             view_in_service_date()
-            userinput_for_task = input('\n[m] to go Back to Menu:')
-            userinput_for_task = ""
+            userinput_for_task = input('\nEnter [m] to return to Menu:')
+            while userinput_for_task != 'm':
+                userinput_for_task = input('Enter[m] to return to Menu:')
+                
             print("__________________________________________________________________")
         
         
-        elif userinput == '6': #View Items from Most to Least Expensive
+        elif userinput == '7': #View Items from Most to Least Expensive
             
             view_price_desc()
-            userinput_for_task = input('\n[m] to go Back to Menu:')
-            userinput_for_task = ""
+            userinput_for_task = input('\nEnter [m] to return to Menu:')
+            while userinput_for_task != 'm':
+                userinput_for_task = input('Enter[m] to return to Menu:')
             print("__________________________________________________________________")
 
-        elif userinput == '7': #View Full Inventory
+        elif userinput == '8': #View Full Inventory
             view_full_inventory()
-            userinput_for_task = input('\n[m] to go Back to Menu:')
-            userinput_for_task = ""
+            userinput_for_task = input('\nEnter [m] to return to Menu:')
+            while userinput_for_task != 'm':
+                userinput_for_task = input('Enter[m] to return to Menu:')
             print("__________________________________________________________________")
             
 
