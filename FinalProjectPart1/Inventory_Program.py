@@ -171,11 +171,11 @@ def clean_user_input(user_input):
             # print('I reverse')
             return user_input
         
-        elif user_input[0][0].lower() in item_type_list and user_input[0][1].lower() in item_type_list:
-            return "multiple_manu_itemType"
+        # elif user_input[0][0].lower() in item_type_list and user_input[0][1].lower() in item_type_list:
+        #     return "multiple_manu_itemType"
 
-        elif user_input[0][0].capitalize() in manufacturer_list and user_input[0][1].capitalize() in manufacturer_list:
-            return "multiple_manu_itemType"
+        # elif user_input[0][0].capitalize() in manufacturer_list and user_input[0][1].capitalize() in manufacturer_list:
+        #     return "multiple_manu_itemType"
 
         else:
             for i in user_input[0].copy(): #looping through a copy of the list to identify elements to remove in the original list. Must do this to avoid skipping elements when modifying the original list
@@ -185,10 +185,13 @@ def clean_user_input(user_input):
             return user_input
 
     else:
-        if len(user_input[0])>2: #len is still > 2 after cleaning
-            return "multiple_manu_itemType"
-        else:
-            return user_input #empty [[]]
+        # if len(user_input[0])>2: #len is still > 2 after cleaning
+        #     return "multiple_manu_itemType"
+        # else:
+        #     return user_input #empty [[]]
+        return user_input
+
+
     # return user_input
     # else:#for len(user_input[0]) <= 1 OR multiple manuitemtype
     #     
@@ -283,46 +286,54 @@ def one_query_manufacturer(user_input):
 def query_manu_itemType(user_input):
     # print("after cleaning", user_input)
 
-    print(user_input)
+    print('i am here',user_input)
     if len(user_input[0]) == 2:
     
         print("__________________________________________________________________")
-        print(f'\nInventory for {user_input[0][0].capitalize()} {user_input[0][1].lower()}s:')
+        # print(f'\nInventory for {user_input[0][0].capitalize()} {user_input[0][1].lower()}s:')
 
         item_count = 0
-
+        inventory_string = ""
         
         for i in full_inventory_list: #[[],[],[]]
             if user_input[0][0].capitalize() == i[1] and user_input[0][1].lower() == i[2]: #if user's manufacturer,j[0], is equal to i[1](manufacturer position) AND i[2](item_type)
                 item_count += 1
                 for j in i:
                     if j == i[3]:
-                        print(f'${j}.00 ', end="")      
+                        inventory_string += '$' + j + '.00 '
+                        # print(f'${j}.00 ', end="")      
                     else:
-                        print(j + " ", end="")
-                print()
+                        if j == i[len(i)-1] and i != full_inventory_list[len(full_inventory_list)-1]:
+                            inventory_string += j + '\n'
+                        else:
+                            inventory_string += j + " "
+                
 
-                # print(i[0], i[1], i[2], f'${i[3]}.00') #print the item_id, manufacturer, item_type, price
+        if item_count == 0:
+            print('\nERROR: Item Does Not Exist')
 
-            elif i == full_inventory_list[len(full_inventory_list)-1] and item_count == 0:
-                print('No Item in Inventory')
+        if len(inventory_string) > 0:
+            inventory_string = f'\nInventory for {user_input[0][0].capitalize()} {user_input[0][1].lower()}s:\n' + inventory_string
+            print(inventory_string, end="")
                 
         print("__________________________________________________________________")
+    else:#len of userinput[0] =2 (for when the user only inputted a manufacturer or item_type)
+        print("__________________________________________________________________")
+        print('\nERROR: Invalid Input. Please Enter a Valid Manufacturer and Item Type.')
+        print("__________________________________________________________________")
 
 
-    if user_input == "multiple_manu_itemType" :
-        print("__________________________________________________________________")
-        print("\nERROR: Please enter only 1 manufacturer and item type", user_input)
-        print("__________________________________________________________________")
+
+    # if user_input == "multiple_manu_itemType" :
+    #     print("__________________________________________________________________")
+    #     print("\nERROR: Please Enter Only 1 Manufacturer and Item Type", user_input)
+    #     print("__________________________________________________________________")
     
-    elif len(user_input[0]) == 1: #lenovo fds fds, but i want to address "multiple_manu_itemType"
-        print("__________________________________________________________________")
-        print("\nERROR: Please enter a valid manufacturer and an item type")
-        print("__________________________________________________________________")
-    elif user_input == [[]]: #empty user_input [[]]
-        print("__________________________________________________________________")
-        print("\nERROR: No such item in inventory")
-        print("__________________________________________________________________")
+    # elif len(user_input[0]) == 1 or user_input == [[]]: #lenovo fds fds, but i want to address "multiple_manu_itemType"
+    #     print("__________________________________________________________________")
+    #     print("\nERROR: Please Enter a Valid Manufacturer and an Item Type")
+    #     print("__________________________________________________________________")
+
 
 
 
