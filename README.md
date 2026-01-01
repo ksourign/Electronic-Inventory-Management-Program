@@ -1,5 +1,5 @@
 ## Electronic Inventory Management System
-Users can easily query inventory data through a terminal-based menu by providing 3 CSV files to merge, and they will receive generated CSV reports of the full inventory data.
+Users can easily query inventory data through a terminal-based menu by providing 3 CSV files to merge, and they will receive generated CSV reports of merged inventory data.
 
 
 **Business Problem:** Company wants to query inventory data easily, but data for 1 item is in 3 separate csv files. Data from csv files must be merged to create reports.
