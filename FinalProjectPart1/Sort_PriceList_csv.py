@@ -1,5 +1,5 @@
 #Creates price_list[] - appends items from "PriceList.csv" (item_id, price)
-#Creates price_sorted[] - sorts item prices desc from "PriceList.csv" (item_id, price)
+#Creates price_sorted_desc[] - sorts item prices desc from "PriceList.csv" (item_id, price)
 
 #Output Format for both lists: [['item_id','price'], ['item2_id', 'item2_price']]
 
