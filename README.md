@@ -14,13 +14,13 @@ Users can easily query inventory data through a terminal-based menu by providing
 
 **CSV Reports:**
 - ***DamagedInventory.csv*** - damaged items
-    - Format: item_id, manufacturer, item_type, price, service_date
+    - item_id, manufacturer, item_type, price, service_date
 - ***FullInventory.csv*** - full inventory 
-    - Format: item_id, manufacturer, item_type, price, service_date, if_damaged
+    - item_id, manufacturer, item_type, price, service_date, if_damaged
 - ***PastServiceDateInventory.csv*** - items past its service date
-    - Format: item_id, manufacturer, item_type, price, service_date, if_damaged
+    - item_id, manufacturer, item_type, price, service_date, if_damaged
 - ***{item_type}Inventory.csv*** - items of the same item type
-    - Format: item_id, manufacturer, price, service_date, if_damaged
+    - item_id, manufacturer, price, service_date, if_damaged
     - EX: ***PhoneInventory.csv***, ***LaptopInventory.csv***, ***TowerInventory.csv***
 
 
