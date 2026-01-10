@@ -22,7 +22,7 @@ def writing_full_inventory_csv(print_output = True):
     
     print('Full Inventory List:')
 
-    with open('csv_outputs/FullInventory.csv', 'w', newline='') as full_inventory_csv: #file obj, returns csv file
+    with open('csv_reports/FullInventory.csv', 'w', newline='') as full_inventory_csv: #file obj, returns csv file
         write_full_inventory_csv = csv.writer(full_inventory_csv) #csv writer object
         write_full_inventory_csv.writerows(full_inventory_list)
     
@@ -40,7 +40,7 @@ def writing_item_type_csv():
         x_item_type_list = []
         if(i[2] not in diff_item_type): #if item_type not in item_type[], then loop thru full_inventory for that diff item_type
             diff_item_type.append(i[2]) #append new item_type ['phone','laptop'...]
-            with open(f"csv_outputs/{i[2].capitalize()}Inventory.csv", 'w', newline='') as item_type_csv: #creating {Item_type}Inventory.csv file (ex: "LaptopInventory.csv")
+            with open(f"csv_reports/{i[2].capitalize()}Inventory.csv", 'w', newline='') as item_type_csv: #creating {Item_type}Inventory.csv file (ex: "LaptopInventory.csv")
                 write_csv_item_type = csv.writer(item_type_csv)
                 for j in full_inventory_list: #for appending item records related to the item_type chosen, i[2]. Loop item_type, i[2], in full_inventory_list until it's done
                     if i[2] == j[2]: #if the item_type, i[2], == j[2] then write down tht item_type record, (j), into {item_type}Inventory.csv
@@ -61,7 +61,7 @@ def writing_past_service_date_csv(print_output = True):
     
     past_service_date_array = [] #itemid, manufacturer, item_type, price, service_date, if_damaged
 
-    with open('csv_outputs/PastServiceDateInventory.csv', 'w', newline='') as past_service_date_csv: #creating PastServiceDateInventory csv file
+    with open('csv_reports/PastServiceDateInventory.csv', 'w', newline='') as past_service_date_csv: #creating PastServiceDateInventory csv file
         write_csv_past_service_date = csv.writer(past_service_date_csv)
         for i in past_service_date_list:
             for j in full_inventory_list:
@@ -83,7 +83,7 @@ def writing_damaged_inventory_csv(print_output = True): #calling writing_damaged
         print('\nDamaged Inventory List:')
 
     damaged_inventory_list = []
-    with open ('csv_outputs/DamagedInventory.csv', 'w', newline='') as damaged_inventory_csv:
+    with open ('csv_reports/DamagedInventory.csv', 'w', newline='') as damaged_inventory_csv:
         write_csv_damaged_inventory = csv.writer(damaged_inventory_csv)
         for i in full_inventory_list:
             if len(i) == 6: #item records w/len of 6 indicates that it is damaged (Ex: ['7346234', 'Lenovo', 'laptop', '239', '9/1/2020', 'damaged'] vs ['1009453', 'Lenovo', 'tower', '599', '10/1/2020'])
@@ -304,7 +304,7 @@ def query_manu_itemType(user_input):
                         # print(f'${j}.00 ', end="")      
                     else:
                         if j == i[len(i)-1] and i != full_inventory_list[len(full_inventory_list)-1]:
-                            inventory_string += j + '\n'
+                            inventory_string += j
                         else:
                             inventory_string += j + " "
                 
@@ -314,9 +314,8 @@ def query_manu_itemType(user_input):
 
         if len(inventory_string) > 0:
             inventory_string = f'\nInventory for {user_input[0][0].capitalize()} {user_input[0][1].lower()}s:\n' + inventory_string
-            print(inventory_string, end="")
+            print(inventory_string+"\n"+"__________________________________________________________________")
                 
-        print("__________________________________________________________________")
     else:#len of userinput[0] =2 (for when the user only inputted a manufacturer or item_type)
         print("__________________________________________________________________")
         print('\nERROR: Invalid Input. Please Enter a Valid Manufacturer and Item Type.')
@@ -456,6 +455,9 @@ if __name__ == "__main__":
         #     print("Enter a Valid Menu Number (1-5)")
         #     userinput = ""
         # else:
+        
+
+        
         userinput = input("\nInventory Query Menu: \n"
         "[1] View Items Given Manufacturer \n"
         "[2] View Items Given Manufacturer and Item Type\n"
@@ -470,6 +472,9 @@ if __name__ == "__main__":
         "__________________________________________________________________\n\n"
         "Enter Menu Number [1-8]:")
         
+        while userinput not in ("1","2","3","4","5","6","7","8"):
+            userinput = input("Enter Menu Number [1-8]:")
+            print()
         
         if userinput == '1':
             print("[1] View Items Given Manufacturer")
@@ -505,7 +510,7 @@ if __name__ == "__main__":
             return_manufacturers()
             print('\n')
             # print("\n\n[m] Back to Menu\n")
-            print('Enter [m] to return to Menu')
+            print('Enter [m] to Return to Menu')
             userinput_for_task = input('Enter Manufacturer:')
             
             if userinput_for_task != 'm':
@@ -525,7 +530,7 @@ if __name__ == "__main__":
             return_manufacturers_itemType()
             print()
 
-            print('Enter [m] to return to Menu')
+            print('Enter [m] to Return to Menu')
             userinput_for_task = input('Enter Manufacturer and Item Type [ex: "apple phone"]:')
                         
             if userinput_for_task != 'm':
@@ -546,11 +551,11 @@ if __name__ == "__main__":
             damaged_items = writing_damaged_inventory_csv(print_output = False) #returns the damaged_inventory_list returned in the method, writing_damaged_inventory_csv() 
             view_damaged_items(damaged_items)
 
-            userinput_for_task = input('\nEnter [m] to return to Menu:')
+            userinput_for_task = input('\nEnter [m] to Return to Menu:')
             
             while userinput_for_task != 'm':
                 
-                userinput_for_task = input('Enter[m] to return to Menu:')
+                userinput_for_task = input('Enter [m] to Return to Menu:')
 
             # userinput_for_task = ""
             print("__________________________________________________________________")
@@ -561,29 +566,29 @@ if __name__ == "__main__":
             damaged_items = writing_damaged_inventory_csv(print_output = False) #returns the damaged_inventory_list returned in the method, writing_damaged_inventory_csv() 
             view_undamaged_items(damaged_items)
             
-            userinput_for_task = input('\nEnter [m] to return to Menu:')
+            userinput_for_task = input('\nEnter [m] to Return to Menu:')
 
             while userinput_for_task != 'm':
                 
-                userinput_for_task = input('Enter [m] to return to Menu:')
+                userinput_for_task = input('Enter [m] to Return to Menu:')
             print("__________________________________________________________________")
 
 
         elif userinput == '5': #View Items Past their Service Date
             view_past_service_date()
-            userinput_for_task = input('\nEnter [m] to return to Menu:')
+            userinput_for_task = input('\nEnter [m] to Return to Menu:')
             
             while userinput_for_task != 'm':
-                userinput_for_task = input('Enter[m] to return to Menu:')
+                userinput_for_task = input('Enter [m] to Return to Menu:')
 
             print("__________________________________________________________________")
 
 
         elif userinput == '6': #View Items within their Service Date
             view_in_service_date()
-            userinput_for_task = input('\nEnter [m] to return to Menu:')
+            userinput_for_task = input('\nEnter [m] to Return to Menu:')
             while userinput_for_task != 'm':
-                userinput_for_task = input('Enter[m] to return to Menu:')
+                userinput_for_task = input('Enter [m] to Return to Menu:')
                 
             print("__________________________________________________________________")
         
@@ -591,16 +596,16 @@ if __name__ == "__main__":
         elif userinput == '7': #View Items from Most to Least Expensive
             
             view_price_desc()
-            userinput_for_task = input('\nEnter [m] to return to Menu:')
+            userinput_for_task = input('\nEnter [m] to Return to Menu:')
             while userinput_for_task != 'm':
-                userinput_for_task = input('Enter[m] to return to Menu:')
+                userinput_for_task = input('Enter [m] to Return to Menu:')
             print("__________________________________________________________________")
 
         elif userinput == '8': #View Full Inventory
             view_full_inventory()
-            userinput_for_task = input('\nEnter [m] to return to Menu:')
+            userinput_for_task = input('\nEnter [m] to Return to Menu:')
             while userinput_for_task != 'm':
-                userinput_for_task = input('Enter[m] to return to Menu:')
+                userinput_for_task = input('Enter [m] to Return to Menu:')
             print("__________________________________________________________________")
             
 

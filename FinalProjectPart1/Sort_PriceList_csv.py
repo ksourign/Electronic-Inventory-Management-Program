@@ -15,9 +15,10 @@ with open (r"csv_inputs/PriceList.csv", 'r') as csv_price:
         price_list.append(i) #appends original csv to correspond sorted price with item_id later
         
     price_sorted_desc = price_list.copy() #price_sorted_desc[] is a copy of price_list[]
+    price_sorted_desc = [[y.strip() for y in x] for x in price_sorted_desc] #stripping white spaces
     
     price_sorted_desc.sort(key=lambda x: int(x[1]), reverse = True) #sorts item prices desc (most to least expensive) by converting str(price) into int(price) before checking
-
+    price_list = [[y.strip() for y in x] for x in price_list]
 
 if __name__ == "__main__": #only run this code if executing this file directly
     print('price_sorted_desc',price_sorted_desc)
