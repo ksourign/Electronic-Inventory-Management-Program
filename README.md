@@ -1,5 +1,5 @@
 ## Electronic Inventory Management System
-Users can easily query inventory data through a terminal-based menu given 3 CSV files to merge and CSV reports of the full inventory data will be generated.
+Users can easily query inventory data through a terminal-based menu by providing 3 CSV files to merge, and they will receive generated CSV reports of merged inventory data.
 
 
 **Business Problem:** Company wants to query inventory data easily, but data for 1 item is in 3 separate csv files. Data from csv files must be merged to create reports.
@@ -14,13 +14,13 @@ Users can easily query inventory data through a terminal-based menu given 3 CSV 
 
 **CSV Reports:**
 - ***DamagedInventory.csv*** - damaged items
-    - Format: item_id, manufacturer, item_type, price, service_date
+    - item_id, manufacturer, item_type, price, service_date
 - ***FullInventory.csv*** - full inventory 
-    - Format: item_id, manufacturer, item_type, price, service_date, if_damaged
+    - item_id, manufacturer, item_type, price, service_date, if_damaged
 - ***PastServiceDateInventory.csv*** - items past its service date
-    - Format: item_id, manufacturer, item_type, price, service_date, if_damaged
+    - item_id, manufacturer, item_type, price, service_date, if_damaged
 - ***{item_type}Inventory.csv*** - items of the same item type
-    - Format: item_id, manufacturer, price, service_date, if_damaged
+    - item_id, manufacturer, price, service_date, if_damaged
     - EX: ***PhoneInventory.csv***, ***LaptopInventory.csv***, ***TowerInventory.csv***
 
 
