@@ -259,19 +259,17 @@ def return_manufacturers_itemType():
     
     return dict_unique_manufacturer_itemType
 
+################################################################################################################################################
+#QUERY MENU FUNCTIONS
 
 #[1]find items in inventory given manufacturer
 def one_query_manufacturer(user_input):
     print("__________________________________________________________________")
-
-    if user_input != False:
+    # print('userinput',user_input)
+    if len(user_input[0]) != 0:
     #clean user input can be a valid manufacturer or item_type tho.
     # how to remove the item_type here
-
-    
-
-
-        print("Output:")
+        print("\nOutput:")
 
         for i in full_inventory_list:
             if i[1] == user_input[0][0].capitalize():
@@ -279,7 +277,7 @@ def one_query_manufacturer(user_input):
         print("__________________________________________________________________")
 
     else:
-        print("testing q1")
+        print("\nERROR: Invalid Manufacturer")
         
 
 #[2]find item in inventory given manufacturer + item_type
@@ -515,7 +513,7 @@ if __name__ == "__main__":
             
             if userinput_for_task != 'm':
                 print(clean_user_input(userinput_for_task))
-                # one_query_manufacturer(clean_user_input(userinput_for_task))
+                one_query_manufacturer(clean_user_input(userinput_for_task))
 
             if userinput_for_task == 'm':
                 print("__________________________________________________________________")
