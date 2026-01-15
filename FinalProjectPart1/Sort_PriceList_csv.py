@@ -12,10 +12,11 @@ with open (r"csv_inputs/PriceList.csv", 'r') as csv_price:
     
   
 price_list = [[y.strip() for y in x] for x in price_list] #strips beginning or ending white spaces first
-price_list = [[y for y in x if y != ''] for x in price_list] #
+price_list = [[y for y in x if y != ''] for x in price_list] #append the item record if it's not null
     
-price_sorted_desc = price_list.copy() #price_sorted_desc[] is a copy of price_list[]    
-price_sorted_desc.sort(key=lambda x: int(x[1]), reverse = True) #sorts item prices desc (most to least expensive) by converting str(price) into int(price) before checking
+# price_sorted_desc = price_list.copy() #price_sorted_desc[] is a copy of price_list[]    
+
+# price_sorted_desc.sort(key=lambda x: int(x[1]), reverse = True) #sorts item prices desc (most to least expensive) by converting str(price) into int(price) before checking
 
 
 if __name__ == "__main__": #only run this code if executing this file directly
